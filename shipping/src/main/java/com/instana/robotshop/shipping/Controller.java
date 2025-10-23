@@ -131,7 +131,7 @@ public class Controller {
         Ship ship = new Ship(distance, cost);
 
         // Simulasi response code sukses
-        SpanSupport.annotate("custom.response_code", "000");
+        SpanSupport.annotate("tags.http.status_code", "000");
         SpanSupport.annotate("custom.response_message", "Shipping calculation success");
         SpanSupport.annotate("shipping.distance", String.valueOf(distance));
         SpanSupport.annotate("shipping.cost", String.valueOf(cost));
