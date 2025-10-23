@@ -109,9 +109,9 @@ public class Controller {
         return cities;
     }
 
-    // Modifikasi di sini
     @GetMapping("/calc/{id}")
-    public Map<String, Object> calc(@PathVariable long id) {
+    @Span(value = "shipping_calc")
+    public Ship calc(@PathVariable long id) {
         double homeLatitude = 51.164896;
         double homeLongitude = 7.068792;
 
@@ -119,6 +119,9 @@ public class Controller {
 
         City city = cityrepo.findById(id);
         if (city == null) {
+            // Set tag custom response code untuk error
+            SpanSupport.annotate("custom.response_code", "99");
+            SpanSupport.annotate("custom.response_message", "City not found");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "city not found");
         }
 
@@ -126,15 +129,15 @@ public class Controller {
         long distance = calc.getDistance(homeLatitude, homeLongitude);
         double cost = Math.rint(distance * 5) / 100.0;
         Ship ship = new Ship(distance, cost);
+
+        // Simulasi response code sukses
+        SpanSupport.annotate("custom.response_code", "000");
+        SpanSupport.annotate("custom.response_message", "Shipping calculation success");
+        SpanSupport.annotate("shipping.distance", String.valueOf(distance));
+        SpanSupport.annotate("shipping.cost", String.valueOf(cost));
+
         logger.info("shipping {}", ship);
-
-        // Tambah custom response di sini
-        Map<String, Object> response = new LinkedHashMap<>();
-        response.put("responseCode", "000");
-        response.put("responseMessage", "SuccessKu");
-        response.put("data", ship);
-
-        return response;
+        return ship;
     }
 
 //    @GetMapping("/calc/{id}")
