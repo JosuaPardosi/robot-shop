@@ -109,8 +109,9 @@ public class Controller {
         return cities;
     }
 
+    // Modifikasi di sini
     @GetMapping("/calc/{id}")
-    public Ship caclc(@PathVariable long id) {
+    public Map<String, Object> calc(@PathVariable long id) {
         double homeLatitude = 51.164896;
         double homeLongitude = 7.068792;
 
@@ -123,13 +124,40 @@ public class Controller {
 
         Calculator calc = new Calculator(city);
         long distance = calc.getDistance(homeLatitude, homeLongitude);
-        // avoid rounding
         double cost = Math.rint(distance * 5) / 100.0;
         Ship ship = new Ship(distance, cost);
         logger.info("shipping {}", ship);
 
-        return ship;
+        // Tambah custom response di sini
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("responseCode", "000");
+        response.put("responseMessage", "SuccessKu");
+        response.put("data", ship);
+
+        return response;
     }
+
+//    @GetMapping("/calc/{id}")
+//    public Ship caclc(@PathVariable long id) {
+//        double homeLatitude = 51.164896;
+//        double homeLongitude = 7.068792;
+//
+//        logger.info("Calculation for {}", id);
+//
+//        City city = cityrepo.findById(id);
+//        if (city == null) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "city not found");
+//        }
+//
+//        Calculator calc = new Calculator(city);
+//        long distance = calc.getDistance(homeLatitude, homeLongitude);
+//        // avoid rounding
+//        double cost = Math.rint(distance * 5) / 100.0;
+//        Ship ship = new Ship(distance, cost);
+//        logger.info("shipping {}", ship);
+//
+//        return ship;
+//    }
 
     // enforce content type
 //    @PostMapping(path = "/confirm/{id}", consumes = "application/json", produces = "application/json")
@@ -241,9 +269,9 @@ public class Controller {
         // Hitung latency
         long latency = System.currentTimeMillis() - start;
 
-        // ✅ Tambahkan custom tags ke Instana trace
+        //  Tambahkan custom tags ke Instana trace
         SpanSupport.annotate("shipping.orderId", orderid);
-        SpanSupport.annotate("shipping.responseCode", "200");
+        SpanSupport.annotate("shipping.responseCode", "003");
         SpanSupport.annotate("shipping.latency", String.valueOf(latency));
         SpanSupport.annotate("shipping.message", "Order dispatched successfully");
 
