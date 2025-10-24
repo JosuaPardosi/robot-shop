@@ -120,7 +120,7 @@ public class Controller {
         City city = cityrepo.findById(id);
         System.out.println("Current span ID: " + Long.toHexString(SpanSupport.currentSpanId(Span.Type.ENTRY)));
         if (city == null) {
-            // Set tag custom response code untuk error
+            // Set tag custom response  error code
             SpanSupport.annotate("custom.response_code", "99");
             SpanSupport.annotate("custom.response_message", "City not found");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "city not found");
@@ -131,7 +131,7 @@ public class Controller {
         double cost = Math.rint(distance * 5) / 100.0;
         Ship ship = new Ship(distance, cost);
 
-        // Simulasi response code sukses
+        // Simulation of successful response code
         SpanSupport.annotate(Span.Type.ENTRY,"SPAN_NAME","tags.http.status_code", "000");
         SpanSupport.annotate(Span.Type.ENTRY,"SPAN_NAME","tags.http.response_message", "Shipping calculation success");
         SpanSupport.annotate(Span.Type.ENTRY,"SPAN_NAME","tags.http.distance", String.valueOf(distance));
@@ -193,9 +193,9 @@ public class Controller {
 //            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "cart not found");
 //        }
 //
-//        // --- Tambahkan Instrumentation di sini ---
+//        // --- Add Instrumentation here ---
 //        try {
-//            // contoh sederhana, bisa diganti dengan JSON parser
+//            // simple example, can be replaced with a JSON parser
 //            SpanSupport.annotate(Span.Type.valueOf("business"), "transaction", "id", id);
 //            SpanSupport.annotate(Span.Type.valueOf("business"), "transaction", "request_body", body);
 //            SpanSupport.annotate(Span.Type.valueOf("business"), "transaction", "response_body", cart);
@@ -254,8 +254,8 @@ public class Controller {
         return cartResponse;
     }
 
-    // Tambahan: endpoint baru untuk uji response body
-    @Span(value = "shipping.dispatch") // membuat custom span di Instana
+    // Addition: new endpoint for response body testing
+    @Span(value = "shipping.dispatch") // create a custom span in Instana
     @PostMapping(path = "/dispatch/{orderid}", produces = "application/json")
     public Map<String, Object> dispatch(@PathVariable String orderid, @RequestBody(required = false) String payload) {
         long start = System.currentTimeMillis();
@@ -274,7 +274,7 @@ public class Controller {
         // Hitung latency
         long latency = System.currentTimeMillis() - start;
 
-        //  Tambahkan custom tags ke Instana trace
+        // Add custom tags to Instana trace
         SpanSupport.annotate("shipping.orderId", orderid);
         SpanSupport.annotate("shipping.responseCode", "003");
         SpanSupport.annotate("shipping.latency", String.valueOf(latency));
