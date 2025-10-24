@@ -138,6 +138,7 @@ public class Controller {
         SpanSupport.annotate(Span.Type.ENTRY,"SPAN_NAME","tags.http.cost", String.valueOf(cost));
 
         logger.info("shipping {}", ship);
+        logger.info("Current span ID: " + Long.toHexString(SpanSupport.currentSpanId(Span.Type.ENTRY)));
         return ship;
     }
 
