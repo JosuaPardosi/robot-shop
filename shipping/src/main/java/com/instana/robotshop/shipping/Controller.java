@@ -110,7 +110,7 @@ public class Controller {
     }
 
     @GetMapping("/calc/{id}")
-    @Span(value = "shipping_calc")
+    @Span(type = Span.Type.ENTRY, value = "shipping")
     public Ship calc(@PathVariable long id) {
         double homeLatitude = 51.164896;
         double homeLongitude = 7.068792;
@@ -131,10 +131,10 @@ public class Controller {
         Ship ship = new Ship(distance, cost);
 
         // Simulasi response code sukses
-        SpanSupport.annotate("tags.http.status_code", "000");
-        SpanSupport.annotate("custom.response_message", "Shipping calculation success");
-        SpanSupport.annotate("shipping.distance", String.valueOf(distance));
-        SpanSupport.annotate("shipping.cost", String.valueOf(cost));
+        SpanSupport.annotate(Span.Type.ENTRY,"tags.http.status_code", "000");
+        SpanSupport.annotate(Span.Type.ENTRY,"tags.http.response_message", "Shipping calculation success");
+        SpanSupport.annotate(Span.Type.ENTRY,"tags.http.distance", String.valueOf(distance));
+        SpanSupport.annotate(Span.Type.ENTRY,"tags.http.cost", String.valueOf(cost));
 
         logger.info("shipping {}", ship);
         return ship;
