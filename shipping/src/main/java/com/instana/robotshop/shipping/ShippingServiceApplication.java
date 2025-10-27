@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
+import com.instana.sdk.annotation.Span;
 import com.instana.sdk.support.SpanSupport;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -69,7 +70,8 @@ public class ShippingServiceApplication implements WebMvcConfigurer {
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
             SpanSupport.annotate("datacenter", DATA_CENTERS[new Random().nextInt(DATA_CENTERS.length)]);
-
+            SpanSupport.annotate(Span.Type.ENTRY,"ShippingCalculation","tags.http.status_code", "000");
+            SpanSupport.annotate(Span.Type.ENTRY,"ShippingCalculation","tags.http.response_message", "Shipping calculation success");
             return super.preHandle(request, response, handler);
         }
     }
