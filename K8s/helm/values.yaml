@@ -57,7 +57,24 @@ redis:
   # Storage class to use with redis statefulset.
   storageClassName: standard
 
-shipping: {}
+shipping:
+  env:
+    - name: JAVA_TOOL_OPTIONS
+      value: "-javaagent:/instana/agent/instana-agent.jar"
+    - name: INSTANA_AGENT_KEY
+      value: "hops0zfQTiqMVetWMNzjWA"
+    - name: INSTANA_AGENT_ENDPOINT
+      value: "https://instana-0.ibmdte.local"
+  volumeMounts:
+    - name: instana-agent
+      mountPath: /instana/agent
+      readOnly: true
+  volumes:
+    - name: instana-agent
+      hostPath:
+        path: /opt/instana/agent
+        type: Directory
+
 
 user: {}
 
