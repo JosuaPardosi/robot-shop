@@ -115,32 +115,57 @@ public class Controller {
         SpanSupport.annotate("result.count", String.valueOf(cities.size()));
         return cities;
     }
-
     @GetMapping("/calc/{id}")
     @Span(value = "calculate_shipping_cost", type = Span.Type.ENTRY)
     public Ship caclc(@PathVariable long id) {
         double homeLatitude = 51.164896;
         double homeLongitude = 7.068792;
-
-        logger.info("Calculation for {}", id);
+        // menambahkan tags kustom
         SpanSupport.annotate("calc.id", String.valueOf(id));
-
         City city = cityrepo.findById(id);
         if (city == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "city not found");
         }
-
+        // Kalkulasi
         Calculator calc = new Calculator(city);
         long distance = calc.getDistance(homeLatitude, homeLongitude);
         double cost = Math.rint(distance * 5) / 100.0;
         Ship ship = new Ship(distance, cost);
 
+        // Tambahkan tag baru
         SpanSupport.annotate("calc.distance", String.valueOf(distance));
         SpanSupport.annotate("calc.cost", String.valueOf(cost));
-
+        SpanSupport.annotate("calc.customTag", "nilai_kustom");
         logger.info("shipping {}", ship);
         return ship;
     }
+
+
+//    @GetMapping("/calc/{id}")
+//    @Span(value = "calculate_shipping_cost", type = Span.Type.ENTRY)
+//    public Ship caclc(@PathVariable long id) {
+//        double homeLatitude = 51.164896;
+//        double homeLongitude = 7.068792;
+//
+//        logger.info("Calculation for {}", id);
+//        SpanSupport.annotate("calc.id", String.valueOf(id));
+//
+//        City city = cityrepo.findById(id);
+//        if (city == null) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "city not found");
+//        }
+//
+//        Calculator calc = new Calculator(city);
+//        long distance = calc.getDistance(homeLatitude, homeLongitude);
+//        double cost = Math.rint(distance * 5) / 100.0;
+//        Ship ship = new Ship(distance, cost);
+//
+//        SpanSupport.annotate("calc.distance", String.valueOf(distance));
+//        SpanSupport.annotate("calc.cost", String.valueOf(cost));
+//
+//        logger.info("shipping {}", ship);
+//        return ship;
+//    }
 
     @PostMapping(path = "/confirm/{id}", consumes = "application/json", produces = "application/json")
     @Span(value = "confirm_shipping", type = Span.Type.ENTRY)
