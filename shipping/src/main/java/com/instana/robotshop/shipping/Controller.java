@@ -112,6 +112,9 @@ public class Controller {
     @GetMapping("/calc/{id}")
     @Span(type = Span.Type.ENTRY, value = "ShippingCalculation")
     public Ship calc(@PathVariable long id) {
+        System.out.println("Is Span active? " + SpanSupport.isTracing(Span.Type.ENTRY));
+        System.out.println("Current Span ID: " + Long.toHexString(SpanSupport.currentSpanId(Span.Type.ENTRY)));
+
         double homeLatitude = 51.164896;
         double homeLongitude = 7.068792;
 
