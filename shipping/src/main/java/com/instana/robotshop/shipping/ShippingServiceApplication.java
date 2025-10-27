@@ -70,8 +70,8 @@ public class ShippingServiceApplication implements WebMvcConfigurer {
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
             SpanSupport.annotate("datacenter", DATA_CENTERS[new Random().nextInt(DATA_CENTERS.length)]);
-            SpanSupport.annotate(Span.Type.ENTRY,"ShippingCalculation","tags.http.status_code", "000");
-            SpanSupport.annotate(Span.Type.ENTRY,"ShippingCalculation","tags.http.response_message", "Shipping calculation success");
+            SpanSupport.annotate("tags.http.status_code", "000");
+            SpanSupport.annotate("tags.http.response_message", "Shipping calculation success");
             return super.preHandle(request, response, handler);
         }
     }
