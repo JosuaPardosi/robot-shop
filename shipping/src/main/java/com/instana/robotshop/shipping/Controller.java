@@ -110,7 +110,7 @@ public class Controller {
     }
 
     @GetMapping("/calc/{id}")
-    @Span(type = Span.Type.INTERMEDIATE, value = "SPAN_NAME")
+    @Span(type = Span.Type.ENTRY, value = "ShippingCalculation")
     public Ship calc(@PathVariable long id) {
         double homeLatitude = 51.164896;
         double homeLongitude = 7.068792;
@@ -132,10 +132,10 @@ public class Controller {
         Ship ship = new Ship(distance, cost);
 
         // Simulation of successful response code
-        SpanSupport.annotate(Span.Type.INTERMEDIATE,"SPAN_NAME","tags.http.status_code", "000");
-        SpanSupport.annotate(Span.Type.INTERMEDIATE,"SPAN_NAME","tags.http.response_message", "Shipping calculation success");
-        SpanSupport.annotate(Span.Type.INTERMEDIATE,"SPAN_NAME","tags.http.distance", String.valueOf(distance));
-        SpanSupport.annotate(Span.Type.INTERMEDIATE,"SPAN_NAME","tags.http.cost", String.valueOf(cost));
+        SpanSupport.annotate(Span.Type.ENTRY,"ShippingCalculation","tags.http.status_code", "000");
+        SpanSupport.annotate(Span.Type.ENTRY,"ShippingCalculation","tags.http.response_message", "Shipping calculation success");
+        SpanSupport.annotate(Span.Type.ENTRY,"ShippingCalculation","tags.http.distance", String.valueOf(distance));
+        SpanSupport.annotate(Span.Type.ENTRY,"ShippingCalculation","tags.http.cost", String.valueOf(cost));
 
         logger.info("shipping {}", ship);
         logger.info("Current span ID: " + Long.toHexString(SpanSupport.currentSpanId(Span.Type.ENTRY)));
