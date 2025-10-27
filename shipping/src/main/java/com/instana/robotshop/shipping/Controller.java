@@ -135,10 +135,10 @@ public class Controller {
         Ship ship = new Ship(distance, cost);
 
         // Simulation of successful response code
-        SpanSupport.annotate(Span.Type.ENTRY,"ShippingCalculation","tags.http.status_code", "000");
-        SpanSupport.annotate(Span.Type.ENTRY,"ShippingCalculation","tags.http.response_message", "Shipping calculation success");
-        SpanSupport.annotate(Span.Type.ENTRY,"ShippingCalculation","tags.http.distance", String.valueOf(distance));
-        SpanSupport.annotate(Span.Type.ENTRY,"ShippingCalculation","tags.http.cost", String.valueOf(cost));
+        SpanSupport.annotate("tags.http.status_code", "000");
+        SpanSupport.annotate("tags.http.response_message", "Shipping calculation success");
+        SpanSupport.annotate("tags.http.distance", String.valueOf(distance));
+        SpanSupport.annotate("tags.http.cost", String.valueOf(cost));
 
         logger.info("shipping {}", ship);
         logger.info("Current span ID: " + Long.toHexString(SpanSupport.currentSpanId(Span.Type.ENTRY)));
